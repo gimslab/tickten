@@ -25,7 +25,7 @@ export const SettingsPanel: React.FC<Props> = ({
   onTargetGoalChange,
 }) => {
   const { t } = useI18n();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [masterVolume, setMasterVolume] = useState(0.8);
   const [isMuted, setIsMuted] = useState(false);
 
