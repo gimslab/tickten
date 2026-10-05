@@ -1,0 +1,17 @@
+{
+  "name": "TickTen - 스트레칭 비프 타이머",
+  "short_name": "TickTen",
+  "description": "화면을 보지 않고 소리로 인지하는 스트레칭 & 운동 인터벌 비프 타이머",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
