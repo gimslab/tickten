@@ -1,5 +1,6 @@
 import React from 'react';
 import { Play, Pause, RotateCcw } from 'lucide-react';
+import { useI18n } from '../i18n/I18nContext';
 
 interface Props {
   status: 'idle' | 'running' | 'paused';
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export const TimerControls: React.FC<Props> = ({ status, onToggle, onReset }) => {
+  const { t } = useI18n();
   const isRunning = status === 'running';
 
   return (
@@ -22,7 +24,7 @@ export const TimerControls: React.FC<Props> = ({ status, onToggle, onReset }) =>
             ? 'border-slate-800 bg-slate-900/50 text-slate-600 cursor-not-allowed'
             : 'border-slate-700 bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white'
         }`}
-        aria-label="타이머 초기화"
+        aria-label={t.timerControls.resetAria}
       >
         <RotateCcw size={24} />
       </button>
@@ -36,17 +38,17 @@ export const TimerControls: React.FC<Props> = ({ status, onToggle, onReset }) =>
             ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/25 ring-2 ring-amber-400/50'
             : 'bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 shadow-cyan-500/25 ring-2 ring-cyan-400/50'
         }`}
-        aria-label={isRunning ? '타이머 일시정지' : '타이머 시작'}
+        aria-label={isRunning ? t.timerControls.pause : t.timerControls.start}
       >
         {isRunning ? (
           <>
             <Pause size={26} className="fill-current" />
-            <span>일시정지</span>
+            <span>{t.timerControls.pause}</span>
           </>
         ) : (
           <>
             <Play size={26} className="fill-current ml-1" />
-            <span>{status === 'paused' ? '계속하기' : '시작'}</span>
+            <span>{status === 'paused' ? t.timerControls.resume : t.timerControls.start}</span>
           </>
         )}
       </button>

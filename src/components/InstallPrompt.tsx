@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Share, X, Check } from 'lucide-react';
+import { useI18n } from '../i18n/I18nContext';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -7,6 +8,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export const InstallPrompt: React.FC = () => {
+  const { t } = useI18n();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isStandalone, setIsStandalone] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
@@ -60,7 +62,7 @@ export const InstallPrompt: React.FC = () => {
       setShowIOSGuide(true);
     } else {
       // Fallback guide
-      alert('브라우저 메뉴(⋮)에서 "홈 화면에 추가" 또는 "앱 설치"를 선택해주세요.');
+      alert(t.install.fallbackAlert);
     }
   };
 
@@ -78,7 +80,7 @@ export const InstallPrompt: React.FC = () => {
           className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-900/90 border border-cyan-500/40 text-cyan-300 hover:bg-slate-800/90 hover:border-cyan-400 active:scale-98 transition-all shadow-md shadow-cyan-950/50 text-xs sm:text-sm font-semibold"
         >
           <Download size={16} className="text-cyan-400 animate-bounce" />
-          <span>스마트폰에 앱으로 설치하기</span>
+          <span>{t.install.installButton}</span>
         </button>
       </div>
 
@@ -89,7 +91,7 @@ export const InstallPrompt: React.FC = () => {
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-slate-100 flex items-center gap-2">
                 <Share size={18} className="text-cyan-400" />
-                아이폰(iOS) 앱 설치 안내
+                {t.install.iosTitle}
               </h3>
               <button
                 type="button"
@@ -101,7 +103,7 @@ export const InstallPrompt: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              아이폰 Safari에서는 아래 순서로 홈 화면에 앱을 추가할 수 있습니다:
+              {t.install.iosDesc}
             </p>
 
             <ol className="text-xs text-slate-300 space-y-2.5 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
@@ -110,7 +112,7 @@ export const InstallPrompt: React.FC = () => {
                   1
                 </span>
                 <span>
-                  사파리 화면 하단(또는 상단)의 <strong>공유 아이콘 [ <Share size={13} className="inline mb-0.5 text-cyan-400" /> ]</strong> 터치
+                  {t.install.iosStep1} [ <Share size={13} className="inline mb-0.5 text-cyan-400" /> ]
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -118,7 +120,7 @@ export const InstallPrompt: React.FC = () => {
                   2
                 </span>
                 <span>
-                  메뉴를 아래로 스크롤하여 <strong>'홈 화면에 추가'</strong> 선택
+                  {t.install.iosStep2}
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -126,7 +128,7 @@ export const InstallPrompt: React.FC = () => {
                   3
                 </span>
                 <span>
-                  우측 상단 <strong>'추가'</strong>를 누르면 설치 완료!
+                  {t.install.iosStep3}
                 </span>
               </li>
             </ol>
@@ -137,7 +139,7 @@ export const InstallPrompt: React.FC = () => {
               className="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
               <Check size={16} />
-              <span>확인했습니다</span>
+              <span>{t.install.confirm}</span>
             </button>
           </div>
         </div>

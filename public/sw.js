@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tickten-v2';
+const CACHE_NAME = 'tickten-v3';
 const ASSETS = [
   './',
   './index.html',

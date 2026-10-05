@@ -1,4 +1,5 @@
 import React from 'react';
+import { useI18n } from '../i18n/I18nContext';
 
 interface Props {
   elapsedMs: number;
@@ -11,6 +12,8 @@ export const TimerDisplay: React.FC<Props> = ({
   intervalSeconds,
   isTimerRunning,
 }) => {
+  const { t } = useI18n();
+
   const totalSeconds = Math.floor(elapsedMs / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -83,23 +86,20 @@ export const TimerDisplay: React.FC<Props> = ({
           <div className="mt-3 flex flex-col items-center">
             <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               {totalSeconds === 0 && !isTimerRunning ? (
-                '준비 완료'
+                t.timerDisplay.ready
               ) : remainingInInterval === intervalSeconds && totalSeconds > 0 ? (
                 <span className="text-cyan-400 font-bold text-sm animate-bounce">
-                  🔔 {totalSeconds}초 도달!
+                  {t.timerDisplay.reached(totalSeconds)}
                 </span>
               ) : (
-                <span>
-                  다음 비프까지{' '}
-                  <strong className="text-cyan-400 font-bold text-sm">
-                    {remainingInInterval}초
-                  </strong>
+                <span className="text-slate-300 font-medium text-xs">
+                  {t.timerDisplay.nextBeep(remainingInInterval)}
                 </span>
               )}
             </div>
 
             <div className="text-[11px] text-slate-500 mt-1 font-mono">
-              주기: {intervalSeconds}초 단위 비프
+              {t.timerDisplay.intervalInfo(intervalSeconds)}
             </div>
           </div>
         </div>

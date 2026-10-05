@@ -4,9 +4,13 @@ import { TimerControls } from './components/TimerControls';
 import { SettingsPanel } from './components/SettingsPanel';
 import { WakeLockBadge } from './components/WakeLockBadge';
 import { InstallPrompt } from './components/InstallPrompt';
+import { LanguageSelector } from './components/LanguageSelector';
+import { useI18n } from './i18n/I18nContext';
 import { Activity } from 'lucide-react';
 
 export function App() {
+  const { t } = useI18n();
+
   const {
     status,
     elapsedMs,
@@ -29,16 +33,19 @@ export function App() {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between items-center p-4 sm:p-6 max-w-lg mx-auto">
       {/* Top Header */}
       <header className="w-full flex flex-col items-center pt-2 sm:pt-4">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-500 text-slate-950 shadow-lg shadow-cyan-500/20">
-            <Activity size={22} className="stroke-[2.5]" />
+        <div className="w-full flex items-center justify-between mb-2 px-1">
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-500 text-slate-950 shadow-lg shadow-cyan-500/20">
+              <Activity size={22} className="stroke-[2.5]" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-slate-100 via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                {t.common.appTitle}
+              </h1>
+              <p className="text-[11px] text-slate-400 font-medium">{t.common.appSubtitle}</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-slate-100 via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              TickTen
-            </h1>
-            <p className="text-[11px] text-slate-400 font-medium">스트레칭 & 운동 비프 타이머</p>
-          </div>
+          <LanguageSelector variant="compact" />
         </div>
 
         {/* Wake Lock Status Indicator */}
@@ -77,7 +84,7 @@ export function App() {
 
       {/* Bottom Footer / Tips */}
       <footer className="w-full text-center text-[12px] text-slate-500 py-3 mt-4 border-t border-slate-900">
-        <p>💡 화면을 보지 않아도 {config.intervalSeconds}초 비프음과 1초 틱 소리로 흐름을 파악할 수 있습니다.</p>
+        <p>{t.common.footerTip(config.intervalSeconds)}</p>
       </footer>
     </div>
   );
