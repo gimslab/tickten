@@ -10,11 +10,15 @@ createRoot(document.getElementById('root')!).render(
 )
 
 // Register service worker for offline/PWA capability
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
+    const swUrl = `${import.meta.env.BASE_URL}sw.js`;
+    navigator.serviceWorker.register(swUrl).then((reg) => {
+      console.log('SW registered successfully:', reg.scope);
+    }).catch((err) => {
       console.warn('SW registration failed:', err);
     });
   });
 }
+
 

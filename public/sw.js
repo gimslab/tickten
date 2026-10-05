@@ -1,9 +1,12 @@
-const CACHE_NAME = 'tickten-v1';
+const CACHE_NAME = 'tickten-v2';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.svg',
+  './pwa-192x192.png',
+  './pwa-512x512.png',
+  './apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -44,7 +47,7 @@ self.addEventListener('fetch', (event) => {
         })
       );
     }).catch(() => {
-      return caches.match('/');
+      return caches.match('./') || caches.match('./index.html');
     })
   );
 });

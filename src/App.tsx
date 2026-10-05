@@ -3,6 +3,7 @@ import { TimerDisplay } from './components/TimerDisplay';
 import { TimerControls } from './components/TimerControls';
 import { SettingsPanel } from './components/SettingsPanel';
 import { WakeLockBadge } from './components/WakeLockBadge';
+import { InstallPrompt } from './components/InstallPrompt';
 import { Activity } from 'lucide-react';
 
 export function App() {
@@ -59,6 +60,9 @@ export function App() {
           onToggle={toggle}
           onReset={reset}
         />
+
+        {/* Install as PWA Prompt */}
+        <InstallPrompt />
 
         {/* Settings Panel */}
         <SettingsPanel
