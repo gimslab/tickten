@@ -58,7 +58,7 @@ export const TimerDisplay: React.FC<Props> = ({
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
-            className={`transition-all duration-75 ${
+            className={`transition-[color,filter] duration-150 ${
               isBeepFlash
                 ? 'text-cyan-300 drop-shadow-[0_0_20px_rgba(34,211,238,0.8)]'
                 : 'text-cyan-500 drop-shadow-[0_0_10px_rgba(6,182,212,0.3)]'
