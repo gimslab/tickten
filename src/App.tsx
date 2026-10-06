@@ -82,8 +82,8 @@ export function App() {
           onTargetGoalChange={setTargetGoalSeconds}
         />
 
-        {/* Google AdSense Banner (단위 광고 슬롯 ID 입력 시 노출) */}
-        <AdSenseBanner slot="" />
+        {/* Google AdSense Banner (단위 광고 슬롯 ID 적용) */}
+        <AdSenseBanner slot="2385760186" />
       </main>
 
       {/* Bottom Footer / Tips */}
