@@ -6,13 +6,11 @@ import { readFileSync } from 'node:fs'
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf-8'))
 
 const appVersion = pkg.version || '1.0.0'
-const buildTime = new Date().toISOString()
 
 function versionJsonPlugin(): Plugin {
   const versionData = JSON.stringify(
     {
       version: appVersion,
-      buildTime,
     },
     null,
     2,
@@ -52,6 +50,5 @@ export default defineConfig({
   ],
   define: {
     __APP_VERSION__: JSON.stringify(appVersion),
-    __BUILD_TIME__: JSON.stringify(buildTime),
   },
 })

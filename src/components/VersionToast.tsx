@@ -28,10 +28,9 @@ export const VersionToast: React.FC<VersionToastProps> = ({ isOpen, onClose }) =
   if (!isOpen) return null;
 
   const versionText = `v${__APP_VERSION__}`;
-  const buildDateText = new Date(__BUILD_TIME__).toLocaleString();
 
   const handleCopy = async () => {
-    const fullInfo = `TickTen ${versionText} - Built: ${buildDateText}`;
+    const fullInfo = `TickTen ${versionText}`;
     try {
       await navigator.clipboard.writeText(fullInfo);
       setCopied(true);
@@ -67,10 +66,6 @@ export const VersionToast: React.FC<VersionToastProps> = ({ isOpen, onClose }) =
           <div className="flex justify-between items-center py-0.5">
             <span className="text-slate-400">Version</span>
             <span className="font-mono font-bold text-cyan-300">{versionText}</span>
-          </div>
-          <div className="flex justify-between items-center py-0.5">
-            <span className="text-slate-400">Build Time</span>
-            <span className="font-mono text-slate-300 text-[11px]">{buildDateText}</span>
           </div>
         </div>
 
