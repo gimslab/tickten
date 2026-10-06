@@ -5,6 +5,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { WakeLockBadge } from './components/WakeLockBadge';
 import { InstallPrompt } from './components/InstallPrompt';
 import { LanguageSelector } from './components/LanguageSelector';
+import { AdSenseBanner } from './components/AdSenseBanner';
 import { useI18n } from './i18n/I18nContext';
 import { Activity } from 'lucide-react';
 
@@ -80,6 +81,9 @@ export function App() {
           targetGoalSeconds={config.targetGoalSeconds}
           onTargetGoalChange={setTargetGoalSeconds}
         />
+
+        {/* Google AdSense Banner (단위 광고 슬롯 ID 입력 시 노출) */}
+        <AdSenseBanner slot="" />
       </main>
 
       {/* Bottom Footer / Tips */}
