@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { useTimer } from './hooks/useTimer';
 import { TimerDisplay } from './components/TimerDisplay';
 import { TimerControls } from './components/TimerControls';
@@ -6,11 +7,33 @@ import { WakeLockBadge } from './components/WakeLockBadge';
 import { InstallPrompt } from './components/InstallPrompt';
 import { LanguageSelector } from './components/LanguageSelector';
 import { AdSenseBanner } from './components/AdSenseBanner';
+import { VersionToast } from './components/VersionToast';
 import { useI18n } from './i18n/I18nContext';
 import { Activity } from 'lucide-react';
 
 export function App() {
   const { t } = useI18n();
+
+  // Stealth 5-tap easter egg state & handler
+  const [isVersionToastOpen, setIsVersionToastOpen] = useState(false);
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<number | null>(null);
+
+  const handleTitleTap = () => {
+    tapCountRef.current += 1;
+    if (tapTimerRef.current) {
+      window.clearTimeout(tapTimerRef.current);
+    }
+
+    if (tapCountRef.current >= 5) {
+      setIsVersionToastOpen(true);
+      tapCountRef.current = 0;
+    } else {
+      tapTimerRef.current = window.setTimeout(() => {
+        tapCountRef.current = 0;
+      }, 2000);
+    }
+  };
 
   const {
     status,
@@ -35,7 +58,16 @@ export function App() {
       {/* Top Header */}
       <header className="w-full flex flex-col items-center pt-2 sm:pt-4">
         <div className="w-full flex items-center justify-between mb-2 px-1">
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2 select-none cursor-pointer active:opacity-90"
+            onClick={handleTitleTap}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleTitleTap();
+            }}
+            aria-label="TickTen Title"
+          >
             <div className="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-500 text-slate-950 shadow-lg shadow-cyan-500/20">
               <Activity size={22} className="stroke-[2.5]" />
             </div>
@@ -90,6 +122,12 @@ export function App() {
       <footer className="w-full text-center text-[12px] text-slate-500 py-3 mt-4 border-t border-slate-900">
         <p>{t.common.footerTip(config.intervalSeconds)}</p>
       </footer>
+
+      {/* Stealth Version Info Toast */}
+      <VersionToast
+        isOpen={isVersionToastOpen}
+        onClose={() => setIsVersionToastOpen(false)}
+      />
     </div>
   );
 }

@@ -4,6 +4,21 @@ import './index.css'
 import App from './App.tsx'
 import { I18nProvider } from './i18n/I18nContext'
 
+// Log version badge in console and expose global version object
+if (typeof window !== 'undefined') {
+  window.__TICKTEN_VERSION__ = {
+    version: __APP_VERSION__,
+    buildTime: __BUILD_TIME__,
+    commit: __COMMIT_HASH__,
+  };
+  console.log(
+    `%c TickTen %cv${__APP_VERSION__} (${__COMMIT_HASH__}) %c ${new Date(__BUILD_TIME__).toLocaleString()} `,
+    'background:#06b6d4;color:#020617;font-weight:bold;padding:2px 6px;border-radius:4px 0 0 4px',
+    'background:#1e293b;color:#38bdf8;font-weight:bold;padding:2px 6px',
+    'background:#0f172a;color:#94a3b8;padding:2px 6px;border-radius:0 4px 4px 0',
+  );
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <I18nProvider>
