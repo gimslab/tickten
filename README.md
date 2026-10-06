@@ -32,27 +32,37 @@ npm run preview
 
 ---
 
-## 🌐 배포 및 개인 도메인 설정 (요약)
+## 🚀 프로덕션 배포 방법 (tools.gimslab.com)
 
-TickTen은 백엔드가 없는 **순수 정적 웹**이므로, 무료 정적 호스팅 서비스를 통해 비용 0원으로 배포하고 개인 도메인을 연결할 수 있습니다.
+TickTen은 **`main` 브랜치에 푸시하면 GitHub Actions를 통해 약 30초 내에 자동으로 빌드 및 실서버(`tools.gimslab.com/tickten`)에 배포**됩니다.
 
-| 호스팅 | 추천 특징 | 도메인 & SSL |
-| :--- | :--- | :--- |
-| **Cloudflare Pages** | 전 세계 최고 속도 CDN, 대역폭 무제한 | 무료 자동 지원 |
-| **GitHub Pages** | GitHub 레포지토리 푸시 시 Actions 자동 배포 | 무료 자동 지원 |
-| **Vercel** | 간편한 원클릭 Git 연동 | 무료 자동 지원 |
+### 📌 초간단 배포 3단계
+```bash
+# 1. 빌드 사전 검증 (타입 체크 및 빌드 오류 방지)
+npm run build
 
-> 📌 **배포 및 도메인 DNS(CNAME) 설정 상세 안내**: [docs/deployment-guide.md](docs/deployment-guide.md)
+# 2. 커밋 및 푸시 (푸시 즉시 자동 배포 시작)
+git add .
+git commit -m "feat: 업데이트 내용 요약"
+git push origin main
+```
+
+### 🔍 배포 상태 및 실서버 확인
+```bash
+# GitHub Actions 배포 진행 상태 확인
+gh run list --limit 1
+```
+- **실서버 접속**: [https://tools.gimslab.com/tickten/](https://tools.gimslab.com/tickten/)
+- **캐시 갱신 팁**: Cloudflare 및 PWA Service Worker 캐시가 적용되어 있으므로, 배포 직후 새 화면이 안 보일 경우 **강력 새로고침(`Ctrl + F5` 또는 `Ctrl + Shift + R`)**을 해주세요.
 
 ---
 
-## 🔄 버전 업그레이드 및 업데이트 배포 (요약)
+## 🌐 호스팅 구조 및 설정
 
-1. **버전 수정**: `package.json`의 `version` 및 `public/sw.js`의 `CACHE_NAME` 갱신
-2. **빌드 검증**: `npm run build`
-3. **푸시 및 자동 배포**: `git push origin main` (연동된 CI/CD가 1분 내 자동 배포)
+TickTen은 **GitHub Pages**에 정적 호스팅되며, 앞단의 **Cloudflare Gateway (`tools-gateway`)**를 통해 `tools.gimslab.com/tickten` 도메인으로 초고속 서빙됩니다.
 
-> 📌 **버전 관리 및 PWA 캐시 갱신 상세 안내**: [docs/release-and-versioning.md](docs/release-and-versioning.md)
+> 📌 **배포 및 도메인 DNS(CNAME) 설정 상세 안내**: [docs/deployment-guide.md](docs/deployment-guide.md)  
+> 📌 **버전 관리 및 PWA 캐시(`sw.js`) 갱신 상세 안내**: [docs/release-and-versioning.md](docs/release-and-versioning.md)
 
 ---
 
