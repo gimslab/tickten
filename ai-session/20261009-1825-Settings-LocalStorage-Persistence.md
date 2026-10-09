@@ -48,6 +48,9 @@
 
 ---
 
-## 3. 검증 결과
+## 3. 검증 및 배포 결과
 - `npm run lint` 통과 (0 errors).
 - `npm run build` TypeScript 컴파일 및 번들링 성공 (`tsc -b && vite build` 정상 완료).
+- Git 커밋 및 GitHub `main` 브랜치 푸시 완료 (`5a660a2`).
+- GitHub Actions 배포 성공 (`Deploy to GitHub Pages` 34s 소요, Status: Success).
+- 라이브 배포 URL 응답 검증: `https://tools.gimslab.com/tickten/` (HTTP/2 200 OK).
