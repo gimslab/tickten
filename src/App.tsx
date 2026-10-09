@@ -45,11 +45,8 @@ export function App() {
     setIntervalSeconds,
     setTickEnabled,
     setTargetGoalSeconds,
-  } = useTimer({
-    intervalSeconds: 10,
-    tickEnabled: true,
-    targetGoalSeconds: null,
-  });
+    resetSettings,
+  } = useTimer();
 
   const isTimerRunning = status === 'running';
 
@@ -112,6 +109,7 @@ export function App() {
           onTickToggle={setTickEnabled}
           targetGoalSeconds={config.targetGoalSeconds}
           onTargetGoalChange={setTargetGoalSeconds}
+          onResetSettings={resetSettings}
         />
 
         {/* Google AdSense Banner (단위 광고 슬롯 ID 적용) */}

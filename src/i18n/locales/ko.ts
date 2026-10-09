@@ -55,5 +55,7 @@ export const ko: TranslationSchema = {
     beepTest: '비프 테스트 🔔',
     mute: '음소거',
     unmute: '음소거 해제',
+    resetDefaults: '설정 초기화',
+    resetSuccess: '기본값으로 초기화됨',
   },
 };

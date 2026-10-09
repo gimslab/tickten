@@ -54,5 +54,7 @@ export interface TranslationSchema {
     beepTest: string;
     mute: string;
     unmute: string;
+    resetDefaults: string;
+    resetSuccess: string;
   };
 }

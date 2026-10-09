@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Bell, Clock, ChevronDown, ChevronUp, Music, Target, Globe } from 'lucide-react';
+import { Volume2, VolumeX, Bell, Clock, ChevronDown, ChevronUp, Music, Target, Globe, RotateCcw, Check } from 'lucide-react';
 import { audioEngine } from '../lib/audioEngine';
+import { DEFAULT_SETTINGS } from '../lib/settings';
 import { useI18n } from '../i18n/I18nContext';
 import { LanguageSelector } from './LanguageSelector';
 
@@ -11,6 +12,7 @@ interface Props {
   onTickToggle: (enabled: boolean) => void;
   targetGoalSeconds: number | null;
   onTargetGoalChange: (sec: number | null) => void;
+  onResetSettings?: () => void;
 }
 
 const INTERVAL_PRESETS = [5, 10, 15, 20, 30, 60];
@@ -23,11 +25,23 @@ export const SettingsPanel: React.FC<Props> = ({
   onTickToggle,
   targetGoalSeconds,
   onTargetGoalChange,
+  onResetSettings,
 }) => {
   const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
-  const [masterVolume, setMasterVolume] = useState(0.8);
-  const [isMuted, setIsMuted] = useState(false);
+  const [masterVolume, setMasterVolume] = useState(() => audioEngine.getSettings().masterVolume);
+  const [isMuted, setIsMuted] = useState(() => audioEngine.getSettings().isMuted);
+  const [justReset, setJustReset] = useState(false);
+
+  const handleResetSettings = () => {
+    setMasterVolume(DEFAULT_SETTINGS.masterVolume);
+    setIsMuted(DEFAULT_SETTINGS.isMuted);
+    onResetSettings?.();
+    setJustReset(true);
+    setTimeout(() => {
+      setJustReset(false);
+    }, 1800);
+  };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
@@ -245,6 +259,31 @@ export const SettingsPanel: React.FC<Props> = ({
                 {isMuted ? '0%' : `${Math.round(masterVolume * 100)}%`}
               </span>
             </div>
+          </div>
+
+          {/* 6. Reset Settings to Defaults */}
+          <div className="border-t border-slate-800/80 pt-4 flex items-center justify-end">
+            <button
+              type="button"
+              onClick={handleResetSettings}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-95 border ${
+                justReset
+                  ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300'
+                  : 'bg-slate-800/80 hover:bg-slate-800 border-slate-700/60 text-slate-300 hover:text-white'
+              }`}
+            >
+              {justReset ? (
+                <>
+                  <Check size={13} className="text-emerald-400 stroke-[2.5]" />
+                  <span>{t.settings.resetSuccess}</span>
+                </>
+              ) : (
+                <>
+                  <RotateCcw size={13} className="text-slate-400" />
+                  <span>{t.settings.resetDefaults}</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
       )}

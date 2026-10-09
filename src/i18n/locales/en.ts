@@ -55,5 +55,7 @@ export const en: TranslationSchema = {
     beepTest: 'Beep Test 🔔',
     mute: 'Mute',
     unmute: 'Unmute',
+    resetDefaults: 'Reset to Defaults',
+    resetSuccess: 'Reset to Defaults Done',
   },
 };

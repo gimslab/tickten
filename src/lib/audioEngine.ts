@@ -4,12 +4,20 @@
  * without needing external audio asset downloads.
  */
 
+import { loadSettings, saveSettings } from './settings';
+
 class AudioEngine {
   private ctx: AudioContext | null = null;
-  private isMuted: boolean = false;
-  private masterVolume: number = 0.8;
+  private isMuted: boolean;
+  private masterVolume: number;
   private beepVolume: number = 0.8;
   private tickVolume: number = 0.3;
+
+  constructor() {
+    const saved = loadSettings();
+    this.masterVolume = saved.masterVolume;
+    this.isMuted = saved.isMuted;
+  }
 
   private getContext(): AudioContext {
     if (!this.ctx) {
@@ -139,6 +147,7 @@ class AudioEngine {
   // Volume & Settings
   public setMasterVolume(v: number): void {
     this.masterVolume = Math.max(0, Math.min(1, v));
+    saveSettings({ masterVolume: this.masterVolume });
   }
 
   public setBeepVolume(v: number): void {
@@ -151,6 +160,7 @@ class AudioEngine {
 
   public setMuted(muted: boolean): void {
     this.isMuted = muted;
+    saveSettings({ isMuted: this.isMuted });
   }
 
   public getSettings() {

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { audioEngine } from '../lib/audioEngine';
 import { wakeLockManager } from '../lib/wakeLock';
+import { loadSettings, saveSettings, DEFAULT_SETTINGS } from '../lib/settings';
 
 export type TimerStatus = 'idle' | 'running' | 'paused';
 
@@ -10,11 +11,17 @@ export interface TimerConfig {
   targetGoalSeconds: number | null; // e.g. 30s, 60s, or null for unlimited
 }
 
-export function useTimer(initialConfig: Partial<TimerConfig> = {}) {
-  const [config, setConfig] = useState<TimerConfig>({
-    intervalSeconds: initialConfig.intervalSeconds ?? 10,
-    tickEnabled: initialConfig.tickEnabled ?? true,
-    targetGoalSeconds: initialConfig.targetGoalSeconds ?? null,
+export function useTimer(overrideConfig?: Partial<TimerConfig>) {
+  const [config, setConfig] = useState<TimerConfig>(() => {
+    const saved = loadSettings();
+    return {
+      intervalSeconds: overrideConfig?.intervalSeconds ?? saved.intervalSeconds,
+      tickEnabled: overrideConfig?.tickEnabled ?? saved.tickEnabled,
+      targetGoalSeconds:
+        overrideConfig?.targetGoalSeconds !== undefined
+          ? overrideConfig.targetGoalSeconds
+          : saved.targetGoalSeconds,
+    };
   });
 
   const [status, setStatus] = useState<TimerStatus>('idle');
@@ -31,7 +38,32 @@ export function useTimer(initialConfig: Partial<TimerConfig> = {}) {
   const configRef = useRef(config);
   useEffect(() => {
     configRef.current = config;
+    saveSettings({
+      intervalSeconds: config.intervalSeconds,
+      tickEnabled: config.tickEnabled,
+      targetGoalSeconds: config.targetGoalSeconds,
+    });
   }, [config]);
+
+  // Sync settings when changed from another tab/window
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'tickten_settings' && e.newValue) {
+        try {
+          const updated = loadSettings();
+          setConfig({
+            intervalSeconds: updated.intervalSeconds,
+            tickEnabled: updated.tickEnabled,
+            targetGoalSeconds: updated.targetGoalSeconds,
+          });
+        } catch {
+          // ignore parsing error
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   // Subscribe to wake lock changes
   useEffect(() => {
@@ -143,6 +175,17 @@ export function useTimer(initialConfig: Partial<TimerConfig> = {}) {
     setConfig((prev) => ({ ...prev, targetGoalSeconds: target }));
   }, []);
 
+  const resetSettings = useCallback(() => {
+    setConfig({
+      intervalSeconds: DEFAULT_SETTINGS.intervalSeconds,
+      tickEnabled: DEFAULT_SETTINGS.tickEnabled,
+      targetGoalSeconds: DEFAULT_SETTINGS.targetGoalSeconds,
+    });
+    audioEngine.setMasterVolume(DEFAULT_SETTINGS.masterVolume);
+    audioEngine.setMuted(DEFAULT_SETTINGS.isMuted);
+    saveSettings(DEFAULT_SETTINGS);
+  }, []);
+
   return {
     status,
     elapsedMs,
@@ -156,5 +199,6 @@ export function useTimer(initialConfig: Partial<TimerConfig> = {}) {
     setIntervalSeconds,
     setTickEnabled,
     setTargetGoalSeconds,
+    resetSettings,
   };
 }
