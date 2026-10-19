@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tickten-v5';
+const CACHE_NAME = 'tickten-v6';
 const ASSETS = [
   './',
   './index.html',
@@ -35,19 +35,58 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+
+  // Ignore cross-origin requests (e.g., Google AdSense)
+  if (url.origin !== self.location.origin) return;
+
+  const isNavigation =
+    event.request.mode === 'navigate' ||
+    event.request.destination === 'document' ||
+    url.pathname.endsWith('/') ||
+    url.pathname.endsWith('/index.html') ||
+    url.pathname.endsWith('/version.json');
+
+  // Network-First for HTML / navigation & version.json so online reloads always get the latest deployment
+  if (isNavigation) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, copy);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          return (
+            caches.match(event.request) ||
+            caches.match('./') ||
+            caches.match('./index.html')
+          );
+        })
+    );
+    return;
+  }
+
+  // Cache-First for hashed static assets (JS, CSS, icons)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return (
         cached ||
         fetch(event.request).then((response) => {
-          return caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, response.clone());
-            return response;
-          });
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, copy);
+            });
+          }
+          return response;
         })
       );
-    }).catch(() => {
-      return caches.match('./') || caches.match('./index.html');
     })
   );
 });
